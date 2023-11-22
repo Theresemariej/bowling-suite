@@ -3,16 +3,15 @@ package bowling;
 import java.util.*;
 
 public class Partie implements IPartieMultiJoueurs {
-	private HashMap<String, PartieMonoJoueur> laGame;
-  private int numJoueurAct=-1;
+        private int numJoueurAct=-1;
 	private String[] noms;
 	private int nombreDeJoueurs;
+	private String phraseRetour;
+	private HashMap<String, PartieMonoJoueur> laPartie;
 	
 
-	private String phraseRetour;
-
 	public String getPhraseRetour() {
-		this.phraseRetour = "Prochain tir : joueur " + noms[numJoueurAct] + ", tour n° " + laGame.get(noms[numJoueurAct]).numeroTourCourant() + ", boule n° " + laGame.get(noms[numJoueurAct]).numeroProchainLancer();
+		this.phraseRetour = "Prochain tir : joueur " + noms[numJoueurAct] + ", tour n° " +  laPartie.get(noms[numJoueurAct]).numeroTourCourant() + ", boule n° " +  laPartie.get(noms[numJoueurAct]).numeroProchainLancer();
 		return phraseRetour;
 	}
 
@@ -32,13 +31,13 @@ public class Partie implements IPartieMultiJoueurs {
 		}
 
 		//initialisation
-		laGame = new HashMap<>();
+		laPartie = new HashMap<>();
 		this.noms = nomsDesJoueurs;
 		nombreDeJoueurs = nomsDesJoueurs.length;
 		numeroJoueurAct = 0;
 
 		for (String nom : nomsDesJoueurs) {
-			laGame.put(nom, new PartieMonoJoueur());
+			 laPartie.put(nom, new PartieMonoJoueur());
 		}
 
 		return getPhraseRetour();
@@ -59,11 +58,11 @@ public class Partie implements IPartieMultiJoueurs {
 			throw new IllegalStateException("La partie n'a pas commencé");
 		}
 		
-		if (laGame.get((noms[0])).numeroTourCourant()==0) {
+		if ( laPartie.get((noms[0])).numeroTourCourant()==0) {
 			return "Partie terminée";
 		}
 		
-		PartieMonoJoueur joueurPartie = laGame.get(noms[numJoueurAct]);
+		PartieMonoJoueur joueurPartie = laPartie.get(noms[numJoueurAct]);
 		joueurPartie.enregistreLancer(nombreDeQuillesAbattues);
 
 		if (joueurPartie.numeroProchainLancer() == 1 || joueurPartie.estTerminee()) {
@@ -81,10 +80,10 @@ public class Partie implements IPartieMultiJoueurs {
 	 */
 	@Override
 	public int scorePour(String nomJoueur) throws IllegalArgumentException {
-		if (laGame.get(nomJoueur) == null) {
+		if ( laPartie.get(nomJoueur) == null) {
 			throw new IllegalArgumentException(nomDuJoueur + "ne joue pas cette partie");
 		}
 		
-		return laGame.get(nomJoueur).score();
+		return  laPartie.get(nomJoueur).score();
 	}
 }
